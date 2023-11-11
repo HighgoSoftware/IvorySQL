@@ -53,14 +53,18 @@ install: all installdirs
 	  $(INSTALL_DATA) $(srcdir)/$$dir/*.h '$(DESTDIR)$(includedir_server)'/$$dir || exit; \
 	done
 ifeq ($(vpath_build),yes)
-	for file in catalog/schemapg.h catalog/system_fk_info.h catalog/pg_*_d.h oracle_parser/ora_gram.h parser/gram.h storage/lwlocknames.h utils/probes.h; do \
+	for file in catalog/schemapg.h catalog/system_fk_info.h catalog/pg_*_d.h storage/lwlocknames.h utils/probes.h; do \
 	  $(INSTALL_DATA) $$file '$(DESTDIR)$(includedir_server)'/$$file || exit; \
 	done
+	$(INSTALL_DATA) $(srcdir)/../../contrib/ivorysql_ora/src/include/*.h $(DESTDIR)$(includedir)/ivorysql_ora
+	$(INSTALL_DATA) $(srcdir)/../../contrib/ivorysql_ora/ivorysql_ora_merge_sqls $(DESTDIR)$(includedir)/ivorysql_ora
+	#$(INSTALL_DATA) $(srcdir)/../../contrib/ivorysql_ora/ivorysql_ora--1.0.sql $(DESTDIR)$(includedir)/ivorysql_ora
 endif
 
 installdirs:
 	$(MKDIR_P) '$(DESTDIR)$(includedir)/libpq' '$(DESTDIR)$(includedir_internal)/libpq'
 	$(MKDIR_P) $(addprefix '$(DESTDIR)$(includedir_server)'/, $(SUBDIRS))
+	$(MKDIR_P) '$(DESTDIR)$(includedir)/ivorysql_ora'
 
 
 uninstall:
