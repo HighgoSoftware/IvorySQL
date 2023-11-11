@@ -66,6 +66,7 @@ Relation	boot_reldesc;		/* current relation descriptor */
 Form_pg_attribute attrtypes[MAXATTR];	/* points to attribute info */
 int			numattr;			/* number of attributes for cur. rel */
 
+extern uint64 predefined_sysidentifier;
 
 /*
  * Basic information associated with each type.  This is used before
@@ -223,13 +224,23 @@ BootstrapModeMain(int argc, char *argv[], bool check_only)
 	argc--;
 
 	/* add parameter "-y" for sql parser mode option */
-	while ((flag = getopt(argc, argv, "B:C:c:d:D:Fkr:X:-:y:")) != -1)
+	while ((flag = getopt(argc, argv, "B:C:c:d:D:Fkr:s:X:-:y:")) != -1)
 	{
 		switch (flag)
 		{
 			case 'B':
 				SetConfigOption("shared_buffers", optarg, PGC_POSTMASTER, PGC_S_ARGV);
 				break;
+			case 's':
+			{
+				char* endptr;
+#ifdef HAVE_STRTOULL
+				predefined_sysidentifier = strtoull(optarg, &endptr, 10);
+#else
+				predefined_sysidentifier = strtoul(optarg, &endptr, 10);
+#endif
+				break;
+			}
 			case 'C':
 			case 'c':
 			case '-':
