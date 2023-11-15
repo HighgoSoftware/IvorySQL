@@ -1756,13 +1756,22 @@ ValidatePgVersion(const char *path)
 
 	FreeFile(file);
 
-	if (my_major != file_major)
-		ereport(FATAL,
-				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-				 errmsg("database files are incompatible with server"),
-				 errdetail("The data directory was initialized by PostgreSQL version %s, "
-						   "which is not compatible with this version %s.",
-						   file_version_string, my_version_string)));
+	if (file_major == 30 && my_major == 16)
+	{
+		ereport(LOG,
+				(errmsg_internal("hg:allowing version mismatch: file_major = %ld, my_major = %ld",
+						file_major, my_major)));
+	}
+	else
+	{
+		if (my_major != file_major)
+			ereport(FATAL,
+					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+					 errmsg("database files are incompatible with server"),
+					 errdetail("The data directory was initialized by PostgreSQL version %s, "
+							   "which is not compatible with this version %s.",
+							   file_version_string, my_version_string)));
+	}
 }
 
 /*-------------------------------------------------------------------------
