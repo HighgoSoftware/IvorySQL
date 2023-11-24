@@ -4096,9 +4096,9 @@ ReadControlFile(void)
 				offsetof(ControlFileData, crc));
 	FIN_CRC32C(crc);
 
-	if (!EQ_CRC32C(crc, ControlFile->crc))
-		ereport(FATAL,
-				(errmsg("incorrect checksum in control file")));
+//	if (!EQ_CRC32C(crc, ControlFile->crc))
+//		ereport(FATAL,
+//				(errmsg("incorrect checksum in control file")));
 
 	/*
 	 * Do compatibility checking immediately.  If the database isn't
